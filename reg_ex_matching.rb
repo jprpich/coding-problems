@@ -4,12 +4,15 @@ def is_match(s,p)
 end
 
 def match(s, p, last_char, arr)
+  
   if (s == "" && p == "")
     return true 
   end
 
   if s && p && s[0] == p[0] 
-    return match(s[1..-1], p[1..-1], s[0], [])
+    if match(s[1..-1], p[1..-1], s[0], [])
+      return true
+    end
   end
   if p && p[0..1] == ".*"
     if match(s, p[1..-1], "",("a".."z").to_a)
@@ -18,10 +21,12 @@ def match(s, p, last_char, arr)
   end
 
   if p && s && p[0] == "."
-    return match(s[1..-1],p[1..-1], s[0], [])
+    if( match(s[1..-1],p[1..-1], s[0], []))
+      return true
+    end
   end
 
-  if p && s && p[0] == "*"  
+  if p && s && p[0] == "*"
     if (last_char == s[0] || arr.include?(s[0])) 
       if match(s[1..-1], p[1..-1], s[0], [])
         return true 
@@ -46,5 +51,6 @@ def match(s, p, last_char, arr)
 end
 
 p is_match("aaa", "ab*a*c*a")
+# p is_match("a", "*c*a")
 
 
