@@ -1,3 +1,4 @@
+require 'byebug'
 def is_match(s,p) 
   match(s,p,"", []) 
 end
@@ -7,27 +8,20 @@ def match(s, p, last_char, arr)
     return true 
   end
 
-  valid_chars = [] 
-  if s[0] == p[0] 
+  if s && p && s[0] == p[0] 
     return match(s[1..-1], p[1..-1], s[0], [])
   end
-  if p[0..1] == ".*"
+  if p && p[0..1] == ".*"
     if match(s, p[1..-1], "",("a".."z").to_a)
       return true 
     end
   end
 
-  if p[0] == "." && arr.empty? 
-    return match(s,p, last_char, ("a".."z").to_a)
+  if p && s && p[0] == "."
+    return match(s[1..-1],p[1..-1], s[0], [])
   end
 
-  if !arr.empty?  
-    if arr.include?(s[0]) && p[0] == "." 
-      return match(s[1..-1], p[1..-1], s[0],("a".."z").to_a) 
-    end 
-  end
-
-  if p[0] == "*"  
+  if p && s && p[0] == "*"  
     if (last_char == s[0] || arr.include?(s[0])) 
       if match(s[1..-1], p[1..-1], s[0], [])
         return true 
@@ -39,15 +33,9 @@ def match(s, p, last_char, arr)
         return true 
       end
     end
-      # if last_char == s[0] || arr.include?(s[0]) 
-      #   return match(s[1..-1], p, s[0],arr) 
-      # end
   end
 
-  
-  
-
-  if p[1] == "*" 
+  if p && p[1] == "*" 
     if match(s, p[2..-1], "", [])
       return true 
     end
@@ -57,4 +45,6 @@ def match(s, p, last_char, arr)
   return false 
 end
 
-p is_match("bbbba", ".*a*a")
+p is_match("aaa", "ab*a*c*a")
+
+
